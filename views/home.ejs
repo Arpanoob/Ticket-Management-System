@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <style>
+        .main11{
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+        .mainRight{
+height: 100%;
+width: 100%;
+            display: flex;
+            flex-direction: column;
+    background-color: #FFFFFF;
+    width: 500px;
+    height: 500px;
+    position: absolute;
+    right: 5%;
+    top:10%;
+    border-radius: 1.5em;
+    box-shadow: 0px 11px 35px 2px rgba(0, 0, 0, 0.14);
+        }
+        .mainLeft
+        {
+            height: 100%;
+width: 100%;
+            display: flex;
+            flex-direction: column;
+   
+    background-color: #FFFFFF;
+    width: 500px;
+    height: 500px;
+    position: absolute;
+    left: 5%;
+    top:10%;
+    border-radius: 1.5em;
+    box-shadow: 0px 11px 35px 2px rgba(0, 0, 0, 0.14);
+        }
+        .user {
+            display: flex;
+            height: 100%;
+            width: 100%;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+                       /* top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%); */
+        }
+#logout{
+    display: flex;
+            height: 500px;
+            width: 500px;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer; 
+}
+#logout:hover{
+    background-color:#E1BEE7;
+    color: #8C55AA  ;
+    border-radius: 10px; /* Added border-radius property */
+    border: 2px solid #8C55AA; /* Added border property */    
+}
+.user:hover{
+    background-color:#E1BEE7;
+    margin-right: 10px;
+    color: #8C55AA  ;
+    border-radius: 10px; /* Added border-radius property */
+    border: 2px solid #8C55AA; /* Added border property */
+}
+
+
+    </style>
+</head>
+<body>
+    <%if(dep===true){%>
+    <%- include("components/header2.ejs",{username:username,profilePic:profilePic})%>
+    <%} else {%>
+    <%- include("components/header",{username:username,profilePic:profilePic})%>
+    <%}%> 
+    <main class="wrapper" >
+        <div class="main11">
+            
+            <% if(user===false&&dep===false) { %>     
+        <div class="mainLeft">
+              <div id="con" class="user"> <h1>User Login</h2></div>
+        </div>
+        <div id="dep" class="mainRight">
+            <div class="user"> <h1>Department Login</h2></div>
+        </div>
+    <% } else { %>
+        <div onclick="logout()" class="main" id="logout">
+            <%if(dep===true){%>
+            <div class="logout"> <h1>Department logout</h2></div>
+            <%}else{%>
+                <div class="logout"> <h1>User logout</h2></div>
+            <%}%>
+                </div>
+        <%}%>
+    </div>
+    </main>
+    <footer>
+        <p>Your Footer Content</p>
+        <!-- Other footer content can go here -->
+        <p>&copy; 2023 Your Name. All rights reserved.</p>
+    </footer>
+    
+</body>
+<script>
+    // Define the logout function in the global scope
+    function logout() {
+        console.log("hi");
+        window.location.href = "/logout";
+    }
+
+    document.addEventListener("DOMContentLoaded", function() {
+        const conLoginBox = document.getElementById("con");
+
+        conLoginBox.addEventListener("click", function() {
+            window.location.href = "/login";
+        });
+
+        const departmentLoginBox = document.getElementById("dep");
+
+        departmentLoginBox.addEventListener("click", function() {
+            window.location.href = "/deplogin";
+        });
+
+        // Attach the logout function to the logout button
+        const logoutButton = document.getElementById("logout");
+        logoutButton.addEventListener("click", logout);
+    });
+</script>
+
+</html>

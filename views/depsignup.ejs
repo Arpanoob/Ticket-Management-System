@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="/css/style.css">
+    <link href="https://fonts.googleapis.com/css?family=Ubuntu" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="path/to/font-awesome/css/font-awesome.min.css">
+    <title>Sign Up</title>
+    <style>
+        body {
+            font-family: 'Ubuntu', sans-serif;
+            margin: 0; /* Remove default margin to prevent overflow */
+            padding: 0; /* Remove default padding to prevent overflow */
+        }
+
+        h1 {
+            text-align: center;
+        }
+
+        .main {
+            text-align: center;
+            margin-top: 20px;
+            
+            height: fit-content;
+        }
+
+        .sign {
+            font-size: 24px;
+        }
+
+        .form {
+            text-align: center;
+        }
+
+        #department {
+            width: 300px;
+            color: rgb(38, 50, 56);
+            font-weight: 700;
+            font-size: 14px;
+            letter-spacing: 1px;
+            background: rgba(136, 126, 126, 0.04);
+            padding: 10px 20px;
+            border: none;
+            border-radius: 20px;
+            outline: none;
+            box-sizing: border-box;
+            border: 2px solid rgba(0, 0, 0, 0.02);
+            margin-bottom: 10px;
+            margin-left: 8px;
+            text-align: center;
+            font-family: 'Ubuntu', sans-serif;
+        }
+
+        /* Styling for select element options */
+        #department option {
+            background-color: #E1BEE7;
+            color: #8C55AA;
+            font-family: 'Ubuntu', sans-serif;
+        }
+
+        /* Styling for department label */
+        #departmentLabel {
+            color: #8C55AA;
+            font-size: 16px;
+            font-weight: bold;
+            margin-left: 10%;
+        }
+
+        .un,
+        .email,
+        .pass,
+        .conPass,
+        .pic-input,
+        .submit,
+        .Sign_ {
+            display: block;
+            margin: 10px auto; /* Center-align the elements horizontally */
+            width: 300px; /* Adjust the width as needed */
+        }
+    </style>
+</head>
+<body>
+    <h1>WELCOME TO TMS</h1>
+    <div class="main">
+        <p class="sign">Sign Up</p>
+        <form class="form" action="/depsignup" method="post" enctype="multipart/form-data">
+            <select name="department" id="department">
+                <option value="technical">Technical</option>
+                <option value="non-technical">Non-Technical</option>
+                <option value="financial">Financial</option>
+            </select>
+            <input class="un" type="text" name="username" placeholder="Username">
+            <input class="email" type="email" name="email" placeholder="Email">
+            <input class="pass" type="password" name="password" placeholder="Password">
+            <input class="conPass" type="password" name="confirmPassword" placeholder="Confirm Password">
+            <br>
+            <label class="pic-input">
+                <input type="file" id="pic" name="pic" required>
+                Choose Pic
+            </label>
+            <br>
+            <br>
+            <button class="submit" type="submit">Sign Up</button>
+        </form>
+        <p class="Sign_"><a href="/deplogin">Login</a></p>
+    </div>
+</body>
+</html>

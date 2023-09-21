@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Socket.IO chat</title>
+  <link rel="stylesheet" href="/css/style.css">
+`
+  <style>
+    
+    body {
+      margin: 0;
+      padding-bottom: 3rem;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    }
+
+    #form {
+      background: rgba(0, 0, 0, 0.15);
+      padding: 0.25rem;
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      display: flex;
+      height: 3rem;
+      box-sizing: border-box;
+      backdrop-filter: blur(10px);
+    }
+
+    #input {
+      border: none;
+      padding: 0 1rem;
+      flex-grow: 1;
+      border-radius: 2rem;
+      margin: 0.25rem;
+    }
+
+    #input:focus {
+      outline: none;
+    }
+
+    .theme-button {
+  background-color: #8C55AA; /* Background color */
+  color: #fff; /* Text color */
+  border: none; /* Remove borders */
+  padding: 10px 20px; /* Add padding */
+  border-radius: 5px; /* Add rounded corners */
+  cursor: pointer; /* Change cursor on hover */
+  outline: none; /* Remove outline on focus */
+}
+
+.theme-button:hover {
+  background-color: #6A3E8A; /* Change background color on hover */
+}
+
+    #form>button {
+      background: #333;
+      border: none;
+      padding: 0 1rem;
+      margin: 0.25rem;
+      border-radius: 3px;
+      outline: none;
+      color: #fff;
+    }
+
+    #messages {
+      list-style-type: none;
+      margin: 0;
+      padding: 0;
+    }
+
+    #messages>li {
+      padding: 0.5rem 1rem;
+    }
+
+    #messages>li:nth-child(odd) {
+      background: #efefef;
+    }
+    header {
+    background-color: #8C55AA;
+    margin-top: 0;
+height: 100px;
+    color: #fff;
+}
+  </style>
+</head>
+
+<body>
+  <header>
+
+  <h1 id="heading" class="Sign_">TICKET MANAGEMENT SYSTEM</h1>
+  <button id="resolved" class="theme-button">Resolved</button>
+</header>
+                <main class="wrapper">
+
+  <ul id="messages"></ul>
+  <form id="form" action="">
+    <input id="input" autocomplete="off" /><button>Send</button>
+  </form>
+</main>
+
+<footer>
+    <p>Your Footer Content</p>
+    <!-- Other footer content can go here -->
+    <p>&copy; 2023 Your Name. All rights reserved.</p>
+</footer>
+</body>
+<script src="/socket.io/socket.io.js"></script>
+<script>
+ // Fetch chat messages from the server and display them
+// Fetch chat messages from the server and display them
+fetch("/chat", {
+  method: "POST",
+})
+  .then(response => {
+    if (!response.ok) {
+      throw new Error(`Network response was not ok (${response.status})`);
+    }
+    return response.json();
+  })
+  .then(chatMessages => {
+    if (Array.isArray(chatMessages) && chatMessages.length > 0) {
+      // Loop through the chat messages and add them to the <ul> element
+      chatMessages.forEach(msg => {
+        const item = document.createElement('li');
+        item.textContent = msg;
+        messages.appendChild(item);
+      });
+      // Scroll to the bottom of the chat to keep the most recent messages visible
+      window.scrollTo(0, document.body.scrollHeight);
+    } else {
+      // Handle the case where there are no chat messages or invalid data
+      console.log("No chat messages to display or invalid data.");
+    }
+  })
+  .catch(error => {
+    // Handle errors, e.g., display an error message to the user
+    console.error("Error fetching chat messages:", error);
+  });
+
+  var socket = io();
+
+
+  var username = '<%= username %>';
+
+  var form = document.getElementById('form');
+  var input = document.getElementById('input');
+  const messages = document.getElementById('messages');
+  let fid;
+  socket.on("fid", function (id) {
+    fid = id;
+    console.log("fid=", fid)
+  })
+
+  
+
+
+  form.addEventListener('submit', function (e) {
+    e.preventDefault();
+
+    if (input.value) {
+      console.log("hi", input.value, fid); 
+      //const item = document.createElement('li');
+      // item.textContent = input.value;
+      // messages.appendChild(item);
+      window.scrollTo(0, document.body.scrollHeight);
+      socket.emit('chat message', { msg: input.value, username:username });
+      socket.emit('c', "hh"); // Emit 'c' event here
+      input.value = '';
+    }
+  });
+
+  socket.on('chatmessage', (msg) => {
+    console.log("hi", msg.message)
+    const item = document.createElement('li');
+    item.textContent =msg.Person+" : "+ msg.message;
+    messages.appendChild(item);
+    window.scrollTo(0, document.body.scrollHeight);
+  });
+  var resolved = document.getElementById("resolved");
+resolved.addEventListener('click', function () {
+  console.log("Resolved button clicked."); // Debugging statement
+
+  fetch("/resolved", {
+    method: 'post'
+  }).then(function (res) {
+    if (!res.ok) {
+      throw new Error(`Network response was not ok (${res.status})`);
+    }
+    
+    console.log("Before alert"); // Debugging statement
+    alert("thank you");
+    console.log("After alert"); // Debugging statement
+    
+    window.location.href = '/home';
+    return res.json();
+  }).then(function (data) {
+    // Handle the response data here
+    console.log("Resolved ticket data:", data);
+
+    // You can update the UI or perform other actions based on the response
+  }).catch(function (error) {
+    // Handle errors, e.g., display an error message to the user
+    console.error("Error resolving ticket:", error);
+  });
+});
+
+</script>
+
+</html>

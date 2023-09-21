@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/css/style.css">
+    <style>
+        /* Additional styles for the cards and scrolling */
+        .card-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .card {
+            background-color: #E1BEE7;
+            /* Update to your desired card color */
+            border: 1px solid #8C55AA;
+            /* Update to your desired border color */
+            padding: 10px;
+            margin: 10px;
+            width: 80%;
+            max-width: 400px;
+            border-radius: 5px;
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+            transition: background-color 0.3s ease-in-out, border 0.3s ease-in-out, transform 0.2s;
+        }
+
+        .card:hover {
+            background-color: #8C55AA;
+            /* Update to your desired hover color */
+            border: 1px solid #E1BEE7;
+            /* Update to your desired hover border color */
+            transform: translateY(-2px);
+            box-shadow: 0px 6px 8px rgba(0, 0, 0, 0.15);
+        }
+
+        #ct {
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        #YT {
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        /* Styling for select element and department label */
+        #department {
+            width: 76%;
+            color: rgb(38, 50, 56);
+            font-weight: 700;
+            font-size: 14px;
+            letter-spacing: 1px;
+            background: rgba(136, 126, 126, 0.04);
+            padding: 10px 20px;
+            border: none;
+            border-radius: 20px;
+            outline: none;
+            box-sizing: border-box;
+            border: 2px solid rgba(0, 0, 0, 0.02);
+            margin-bottom: 10px;
+            margin-left: 46px;
+            text-align: center;
+            font-family: 'Ubuntu', sans-serif;
+        }
+
+        /* Styling for select element options */
+        #department option {
+            background-color: #E1BEE7;
+            color: #8C55AA;
+            font-family: 'Ubuntu', sans-serif;
+        }
+
+        /* Styling for department label */
+        #departmentLabel {
+            color: #8C55AA;
+            font-size: 16px;
+            font-weight: bold;
+            margin-left: 10%;
+        }
+
+        /* Rest of your existing styles */
+        /* ... */
+        .card.clickable {
+            cursor: pointer;
+            border: 2px solid red;
+            /* Add a border to indicate clickability */
+        }
+    </style>
+    <title>TSM</title>
+</head>
+
+<body>
+    <% if(dep===true) { %>
+        <%- include("components/header2.ejs",{username:username,profilePic:profilePic})%>
+            <%} else {%>
+                <%- include("components/header",{username:username,profilePic:profilePic})%>
+                    <%}%>
+                        <main class="wrapper">
+
+                            <!-- Your main content goes here -->
+                            <div class="main1">
+
+                                <div>
+                                    <h1 id="YT">Your Tickets</h1>
+                                </div>
+                                <div id="ticketContainer" class="card-container">
+                                    <!-- Cards will be dynamically added here -->
+                                </div>
+                            </div>
+                            <div class="main2">
+                                <h1 id="ct">Create Ticket</h1>
+                                <br>
+                                <h3 id="departmentLabel">Department</h3>
+                                <select id="department">
+                                    <option value="technical">Technical</option>
+                                    <option value="non-technical">Non-Technical</option>
+                                    <option value="financial">Financial</option>
+                                </select>
+                                <br>
+                                <input class="un" id="subject" type="text" name="subject" placeholder="Subject">
+                                <textarea class="un" id="description" name="description"
+                                    placeholder="Description box"></textarea>
+                                <br>
+                                <button id="submit" class="submit" type="submit">Rise It</button>
+
+                            </div>
+                        </main>
+
+                        <footer>
+                            <p>Your Footer Content</p>
+                            <!-- Other footer content can go here -->
+                            <p>&copy; 2023 Your Name. All rights reserved.</p>
+                        </footer>
+</body>
+<script src="/socket.io/socket.io.js"></script>
+<script>
+    var socket = io();
+    document.addEventListener("DOMContentLoaded", function () {
+        const submitButton = document.querySelector("#submit");
+        const ticketContainer = document.getElementById("ticketContainer");
+        const departmentSelect = document.getElementById("department"); // Get the select element
+
+        fetch("/index", {
+            method: "POST",
+        })
+            .then(response => response.json())
+            .then(response => {
+                // Add the new card to main1 and main2
+                console.log(response.Data);
+                console.log(response.message) // Note the uppercase 'Data'
+                response.Data.forEach(element => {
+                    const newCard = createCardElement(element.Subject, element.Discription);
+                    ticketContainer.appendChild(newCard);
+                    newCard.addEventListener("click", function () {
+                        console.log("fffffffffff", element.Department, element._id)
+
+
+                        const ticketId = element._id; // Replace with the actual ticket ID or unique identifier
+                        socket.emit("onClickCardUser", element);
+                        console.log("fffffdfff  ffffff", element.Department, ticketId)
+                        // Replace with the actual ticket ID
+                        const requestData = { ticketId: ticketId };
+
+                        fetch("/ticketId", {
+                            method: "POST",
+                            headers: {
+                                "Content-Type": "application/json"
+                            },
+                            body: JSON.stringify(requestData), // Send the ticketId in the request body
+                        })
+                            .then((response) => response.json())
+                            .then((response) => {
+                                console.log(response);
+                            })
+                            .catch((error) => {
+                                console.error("Error:", error);
+                            });
+
+
+
+                        window.location.href = '/index/chat';
+                    });
+                });
+            })
+            .catch(error => {
+                // Handle errors if the request fails
+                alert(error);
+            });
+
+
+
+
+        submitButton.addEventListener("click", function () {
+           
+            ticketContainer.innerHTML = '';
+ const subject = document.getElementById("subject").value;
+            const description = document.getElementById("description").value;
+            const selectedDepartment = departmentSelect.value; // Get the selected department value
+            console.log("fhill")
+            const data = {
+                subject: subject,
+                description: description,
+                department: selectedDepartment
+            };
+
+            fetch("/index", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(data)
+            })
+                .then(response => response.json())
+                .then(response => {
+                    // Add the new card to main1 and main2
+                    console.log("ff");
+                    console.log(response.Data);
+                    console.log(response.message) // Note the uppercase 'Data'
+                    response.Data.forEach(element => {
+                        console.log("department", element.department);
+                        const newCard = createCardElement(element.Subject, element.Discription);
+                        ticketContainer.appendChild(newCard);
+                        newCard.addEventListener("click", function () {
+                            const ticketId = element._id; // Replace with the actual ticket ID or unique identifier
+                            console.log("fffffffffff")
+                            socket.emit("onClickCardUser", { department: element.department, id: element.id ,depflag:true});
+                            // socket.emit("onClickCardUser", { department: element.department, id: element.id });
+                            // Replace with the actual ticket ID
+                            const requestData = { ticketId: ticketId };
+
+                            fetch("/ticketId", {
+                                method: "POST",
+                                headers: {
+                                    "Content-Type": "application/json"
+                                },
+                                body: JSON.stringify(requestData), // Send the ticketId in the request body
+                            })
+                                .then((response) => response.json())
+                                .then((response) => {
+                                    console.log(response);
+                                })
+                                .catch((error) => {
+                                    console.error("Error:", error);
+                                });
+                            window.location.href = '/index/chat';
+
+
+
+
+                        });
+                    });
+
+                    alert(response.message);
+                })
+                .catch(error => {
+                    // Handle errors if the request fails
+                    alert(error);
+                });
+        });
+
+        // Function to create a card element
+        function createCardElement(subject, description) {
+            const card = document.createElement("div");
+            card.classList.add("card");
+            card.innerHTML = `
+                    <h2>${subject}</h2>
+                    <p>${description}</p>
+                `;
+            return card;
+        }
+    });
+
+</script>
+
+</html>

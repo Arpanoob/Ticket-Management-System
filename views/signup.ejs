@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="/css/style.css">
+    <link href="https://fonts.googleapis.com/css?family=Ubuntu" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" href="path/to/font-awesome/css/font-awesome.min.css">
+    <title>Sign Up</title>
+    <style>
+        body {
+            font-family: 'Ubuntu', sans-serif;
+        }
+
+        h1 {
+            text-align: center;
+        }
+
+        .main {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .sign {
+            font-size: 24px;
+        }
+
+        .form {
+            display: inline-block;
+            text-align: left;
+        }
+
+        .un,
+        .email,
+        .pass,
+        .conPass,
+        .submit,
+        .Sign_ {
+            display: block;
+            margin: 10px auto; /* Center-align the elements horizontally */
+            width: 300px; /* Adjust the width as needed */
+        }
+
+        .pic-input {
+            margin-left: 30%;
+            
+        }
+    </style>
+</head>
+<body>
+    <h1>WELCOME TO TMS</h1>
+    <div class="main">
+        <p class="sign" align="center">Sign Up</p>
+        <form class="form" action="/signup" method="post" enctype="multipart/form-data">
+            <input class="un" type="text" name="username" placeholder="Username">
+            <input class="email" type="email" name="email" placeholder="Email">
+            <input class="pass" type="password" name="password" placeholder="Password">
+            <input class="conPass" type="password" name="confirmPassword" placeholder="Confirm Password">
+            <br>
+            <label class="pic-input">
+                <input type="file" id="pic" name="pic" required>
+                Choose Pic
+            </label>
+            <br>
+            <br>
+            <button class="submit">Sign Up</button>
+        </form>
+        <p class="Sign_" align="center"><a href="/login">Sign In</a></p>
+    </div>
+</body>
+</html>

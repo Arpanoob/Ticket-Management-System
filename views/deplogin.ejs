@@ -1,0 +1,110 @@
+<html>
+
+<head>
+  <link rel="stylesheet" href="/css/style.css">
+  <link href="https://fonts.googleapis.com/css?family=Ubuntu" rel="stylesheet">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="path/to/font-awesome/css/font-awesome.min.css">
+  <style>
+    #department {
+    width: 76%;
+    color: rgb(38, 50, 56);
+    font-weight: 700;
+    font-size: 14px;
+    letter-spacing: 1px;
+    background: rgba(136, 126, 126, 0.04);
+    padding: 10px 20px;
+    border: none;
+    border-radius: 20px;
+    outline: none;
+    box-sizing: border-box;
+    border: 2px solid rgba(0, 0, 0, 0.02);
+    margin-bottom: 10px;
+    margin-left: 46px;
+    text-align: center;
+    font-family: 'Ubuntu', sans-serif;
+}
+
+/* Styling for select element options */
+#department option {
+    background-color: #E1BEE7;
+    color: #8C55AA;
+    font-family: 'Ubuntu', sans-serif;
+}
+
+/* Styling for department label */
+#departmentLabel {
+    color: #8C55AA;
+    font-size: 16px;
+    font-weight: bold;
+    margin-left: 10%;
+}
+
+
+  
+    body {
+      font-family: 'Ubuntu', sans-serif;
+    }
+
+    h1 {
+      text-align: center;
+    }
+
+    .main {
+      text-align: center;
+      margin-top: 20px;
+    }
+
+    .sign {
+      font-size: 24px;
+    }
+
+    .form {
+      text-align: left;
+    }
+
+    .un,
+    .pass,
+    .submit,
+    .Sign_ {
+      display: block;
+      margin: 10px auto; /* Center-align the elements horizontally */
+      width: 300px; /* Adjust the width as needed */
+    }
+
+    /* Center-align the "Sign In" button */
+    .submit {
+      margin-top: 20px; /* Add some top margin for spacing */
+    }
+  </style>
+  <title>Sign in</title>
+</head>
+
+<body>
+  <h1>WELCOME TO TMS</h1>
+  <div class="main">
+    <p class="sign" align="center">Sign in</p>
+    <form class="form" method="post" action="/deplogin">
+      <select id="department" name="department">
+        <option value="technical">Technical</option>
+        <option value="non-technical">Non-Technical</option>
+        <option value="financial">Financial</option>
+      </select>
+      <input class="un" id="email" type="email" name="email" placeholder="Email">
+      <input class="pass" id="Password" type="password" name="password" placeholder="Password">
+      <button class="submit" type="submit">Sign in</button>
+    </form>
+    <p class="Sign_" align="center"><a href="/depsignup">Sign Up</a></p>
+  </div>
+</body>
+    
+<script>
+    var username = document.getElementById("username").value;
+    var password = document.getElementById("password").value;
+
+    console.log("Username: " + username);
+    console.log("Password: " + password);
+    
+
+</script>
+</html>
