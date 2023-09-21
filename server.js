@@ -302,53 +302,14 @@ app.get('/resolveTicket/chat', (req, res) => {
     // res.sendFile(__dirname + '/views/chat.html');
 })
 app.get('/index/chat', (req, res) => {
-    let send=[] ;
-    ticketModel.find({ _id: ticketId }).then(function (data) {
-        console.log(data);
-        send = data.chat;
-    })
-    depf = false;
-    console.log("r",req.session.profilePic)
-    if (req.session.flag === true) {
-        if (req.session.departmentFlag === true) {
-            res.render('chat.ejs', { username: req.session.username, profilePic: req.session.profilePic, dep: true, user: false, session: true });
-        }
-        else {
-            res.render('chat.ejs', { username: req.session.username, profilePic: req.session.profilePic, dep: false, user: true, session: true });
-        }
-    }
-    else res.redirect('/');
-    // res.sendFile(__dirname + '/views/chat.html');
-})
-let ticketId;
-app.post("/ticketId", function (req, res) {
-    // Retrieve the ticketId from the request body
-    const icketId = req.body.ticketId;
-    ticketId = icketId;
-    console.log("Received ticketId:", icketId, req.body);
-
-    // You can now use the ticketId as needed in your server-side logic
-    // For example, you can store it in a session variable or use it for further processing.
-
-    // Send a response back to the client if needed
-    res.json({ message: "Received ticketId successfully" });
-});
-app.post("/chat",function(req,res){
-    ticketModel.findOne({_id: ticketId})
-    .then(function (t) {
-res.json(t.chat);
-})})
-
-// Function to parse query parameters from the URL
-
-// Now, you can use the ticketId in your chat functionality as needed.
 
 //--socket--
 io.on('connection', (socket) => {
     console.log('a user connected',);
+
     if (depf == true) {
         ticketModel.findOneAndUpdate(
-            { _id: ticketId },
+            { _id:  req.session.ticketId},
             { $set: { DepSocket: socket.id } },
             { new: true } // To get the updated ticket document
         )
@@ -372,7 +333,7 @@ io.on('connection', (socket) => {
     }
     else {
         ticketModel.findOneAndUpdate(
-            { _id: ticketId },
+            { _id:  req.session.ticketId },
             { $set: { UserSocket: socket.id } },
             { new: true } // To get the updated ticket document
         )
@@ -418,7 +379,7 @@ io.on('connection', (socket) => {
         if(XYZ==="resolveTicket")
         {
             //IT IS DEP
-            ticketModel.findOne({ _id: ticketId }).then(data => {
+            ticketModel.findOne({ _id:  req.session.ticketId }).then(data => {
                 if (data) {
                     console.log("idata.UserSocket", data.UserSocket)
                     console.log("idata.DepSocket", data.DepSocket)
@@ -442,7 +403,7 @@ io.on('connection', (socket) => {
                 console.log("arr0",arr);
          
                 ticketModel.findOneAndUpdate(
-                    {  _id: ticketId },          
+                    {  _id:  req.session.ticketId},          
                   { $set: { chat: arr} },
                     { new: true } // To get the updated ticket document
                 )
@@ -465,13 +426,13 @@ io.on('connection', (socket) => {
         
         }
         else{
-            ticketModel.findOne({ _id: ticketId }).then(data => {
+            ticketModel.findOne({ _id: req.session.ticketId}).then(data => {
                 if (data) {
                     console.log("idata.UserSocket", data.UserSocket)
                     console.log("idata.DepSocket", data.DepSocket)
                     console.log("icket", socket.id)
                     // Assuming you have the socket ID of the recipient stored in a variable, e.g., recipientSocketId
-    
+                        arr=data.chat;
                     // Send a message to the specific socket ID
                     arr.push(username+" : "+message);
 
@@ -489,7 +450,7 @@ io.on('connection', (socket) => {
                 console.log("arr0",arr);
          
                 ticketModel.findOneAndUpdate(
-                    {  _id: ticketId },          
+                    {  _id:  req.session.ticketId},          
                   { $set: { chat: arr} },
                     { new: true } // To get the updated ticket document
                 )
@@ -503,7 +464,7 @@ io.on('connection', (socket) => {
                         // Emit a response back to the client to handle the case when the ticket is not found
                        // socket.emit('ticketUpdated', { success: false, message: 'Ticket not found' });
                     }
-                })
+                  })
                 .catch((err) => {
                     console.error('Error updating ticket:', err);
                     // Emit a response back to the client to handle errors
@@ -528,34 +489,34 @@ io.on('connection', (socket) => {
     socket.on('onClickCardDep', function (department) {
         console.log("hiiiii", department.Department, department.Username, department._id, socket.id);
 
-        ticketModel.findOneAndUpdate(
-            { _id:department._id },          
-          { $set: { DepPerson: department.Username } },
-            { new: true } // To get the updated ticket document
-        )
-        .then((updatedTicket) => {
-            if (updatedTicket) {
-                console.log('Ticket updated  dep person:', updatedTicket);
-                // Emit a response back to the client to acknowledge the update
-                socket.emit('ticketUpdated', { success: true, updatedTicket });
-            } else {
-                console.log('Ticket not found');
-                // Emit a response back to the client to handle the case when the ticket is not found
-               // socket.emit('ticketUpdated', { success: false, message: 'Ticket not found' });
-            }
-        })
-        .catch((err) => {
-            console.error('Error updating ticket:', err);
-            // Emit a response back to the client to handle errors
-            //socket.emit('ticketUpdated', { success: false, message: 'Error updating ticket' });
-        });
+        // ticketModel.findOneAndUpdate(
+        //     { _id:department._id },          
+        //   { $set: { DepPerson: department.Username } },
+        //     { new: true } // To get the updated ticket document
+        // )
+        // .then((updatedTicket) => {
+        //     if (updatedTicket) {
+        //         console.log('Ticket updated  dep person:', updatedTicket);
+        //         // Emit a response back to the client to acknowledge the update
+        //         socket.emit('ticketUpdated', { success: true, updatedTicket });
+        //     } else {
+        //         console.log('Ticket not found');
+        //         // Emit a response back to the client to handle the case when the ticket is not found
+        //        // socket.emit('ticketUpdated', { success: false, message: 'Ticket not found' });
+        //     }
+        // })
+        // .catch((err) => {
+        //     console.error('Error updating ticket:', err);
+        //     // Emit a response back to the client to handle errors
+        //     //socket.emit('ticketUpdated', { success: false, message: 'Error updating ticket' });
+        // });
     });
 
     socket.on('onClickCardUser', function (department) {
         console.log("hi", department.Department, department.Username, socket.id);
-        // console.log(ticketId);
+        console.log(req.session.ticketId);
         // ticketModel.findOneAndUpdate(
-        //     { _id:ticketId },
+        //     { _id:req.session.ticketId },
         //     { $set: { UserSocket: socket.id } },
         //     { new: true } // To get the updated ticket document
         // )
@@ -581,8 +542,54 @@ io.on('connection', (socket) => {
         console.log('user disconnected');
     });
 });
+
+
+    let send=[] ;
+    ticketModel.find({ _id:  req.session.ticketId }).then(function (data) {
+        console.log(data);
+        send = data.chat;
+    })
+    depf = false;
+    // res.json(send);
+    console.log("r",req.session.profilePic)
+    if (req.session.flag === true) {
+        if (req.session.departmentFlag === true) {
+            res.render('chat.ejs', { username: req.session.username, profilePic: req.session.profilePic, dep: true, user: false, session: true });
+        }
+        else {
+            res.render('chat.ejs', { username: req.session.username, profilePic: req.session.profilePic, dep: false, user: true, session: true });
+        }
+    }
+    else res.redirect('/');
+    // res.sendFile(__dirname + '/views/chat.html');
+})
+let ticketId;
+app.post("/ticketId", function (req, res) {
+    // Retrieve the ticketId from the request body
+    req.session.ticketId=req.body.ticketId;
+    const icketId = req.body.ticketId;
+    ticketId = icketId;
+    console.log("Received ticketId:", icketId, req.body);
+
+    // You can now use the ticketId as needed in your server-side logic
+    // For example, you can store it in a session variable or use it for further processing.
+
+    // Send a response back to the client if needed
+    res.json({ message: "Received ticketId successfully" });
+});
+app.post("/chat",function(req,res){
+    ticketModel.findOne({_id:  req.session.ticketId})
+    .then(function (t) {
+res.json(t.chat);
+})})
+
+// Function to parse query parameters from the URL
+
+// Now, you can use the ticketId in your chat functionality as needed.
+
+
 app.post('/resolved',function(req,res){
-ticketModel.deleteOne({_id:ticketId}).then(function(){
+ticketModel.deleteOne({_id:req.session.ticketId}).then(function(){
     console.log("successfull deleted");
     res.json("successfull deleted")
 }).catch(function(err){
